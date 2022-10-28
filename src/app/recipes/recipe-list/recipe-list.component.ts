@@ -11,12 +11,12 @@ export class RecipeListComponent implements OnInit {
     new Recipe(
       'Test Recipe',
       'This is simply a test',
-      'https://i.natgeofe.com/n/4f5aaece-3300-41a4-b2a8-ed2708a0a27c/domestic-dog_thumb_4x3.jpg'
+      'https://eadn-wc02-3894996.nxedge.io/wp-content/uploads/2018/01/pistachio-turmeric-rice-bowl6-1024x683.jpg'
     ),
     new Recipe(
       'Test Recipe',
       'This is simply a test',
-      'https://i.natgeofe.com/n/4f5aaece-3300-41a4-b2a8-ed2708a0a27c/domestic-dog_thumb_4x3.jpg'
+      'https://eadn-wc02-3894996.nxedge.io/wp-content/uploads/2018/01/pistachio-turmeric-rice-bowl6-1024x683.jpg'
     ),
   ];
 
