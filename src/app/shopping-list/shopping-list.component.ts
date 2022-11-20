@@ -22,11 +22,16 @@ export class ShoppingListComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit() {
     this.ingredients = this.shoppingListService.getIngredients();
-    this.igChanged = this.shoppingListService.ingredientAdded.subscribe(
+    this.igChanged = this.shoppingListService.ingredientsChanged.subscribe(
       (ingredients: Ingredient[]) => {
         this.ingredients = ingredients;
       }
     );
+  }
+
+  // pass the index around and make it listenable
+  onEditItem(index: number) {
+    this.shoppingListService.startedEditing.next(index);
   }
 
   ngOnChanges(changes: SimpleChanges) {
