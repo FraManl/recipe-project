@@ -9,6 +9,8 @@ import { Recipe } from '../../recipe.model';
 export class RecipeItemComponent implements OnInit {
   @Input() recipe: Recipe; //@ Input : get the recipe from outside (Output = push the recipe outside)
   // @Output() recipeSelected = new EventEmitter<void>();
+
+  // Listen to the index input emitted by recipe list
   @Input() index: number;
 
   // constructor(private recipeService: RecipeService) {}
