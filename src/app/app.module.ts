@@ -18,6 +18,7 @@ import { ShoppingListService } from './shopping-list/shopping-list.service';
 import { RecipeStartComponent } from './recipes/recipe-start/recipe-start.component';
 import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
 import { AuthComponent } from './auth/auth.component';
+import { LoadingSpinnerComponent } from './shared/loadingSpinner/loading-spinner.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { AuthComponent } from './auth/auth.component';
     DropdownDirect,
     RecipeStartComponent,
     RecipeEditComponent,
+    LoadingSpinnerComponent,
   ],
   imports: [
     BrowserModule,
