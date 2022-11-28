@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { onErrorResumeNext } from 'rxjs';
-import { AuthService } from './auth.service';
+import { Route, Router } from '@angular/router';
+import { Observable, onErrorResumeNext } from 'rxjs';
+import { AuthResponseData, AuthService } from './auth.service';
 
 @Component({
   selector: 'app-auth',
@@ -12,7 +13,7 @@ export class AuthComponent {
   isLoading = false;
   error: string = null;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   onSwitchMode() {
     this.isLoginMode = !this.isLoginMode;
@@ -22,31 +23,46 @@ export class AuthComponent {
     if (!form.valid) return;
     const email = form.value.email;
     const password = form.value.password;
-
+    let authObs: Observable<AuthResponseData>;
     this.isLoading = true;
 
     if (this.isLoginMode) {
+      authObs = this.authService.login(email, password);
     } else {
-      this.authService.signup(email, password).subscribe(
-        (response) => {
-          console.log(response);
-          this.isLoading = false;
-        },
-        (errorMessage) => {
-          this.error = errorMessage;
-
-          // better to move error handling into auth service
-
-          //   switch (errorRes.error.error.message) {
-          //     case 'EMAIL_EXISTS':
-          //       this.error = 'This e-mail is already in use by another account.';
-          //   }
-
-          //   this.error = 'An error occured...';
-          this.isLoading = false;
-        }
-      );
-      form.reset();
+      authObs = this.authService.signup(email, password);
     }
+    // .subscribe(
+    //   (response) => {
+    //     console.log(response);
+    //     this.isLoading = false;
+    //   },
+    //   (errorMessage) => {
+    //     this.error = errorMessage;
+
+    //     // better to move error handling into auth service
+
+    //     //   switch (errorRes.error.error.message) {
+    //     //     case 'EMAIL_EXISTS':
+    //     //       this.error = 'This e-mail is already in use by another account.';
+    //     //   }
+
+    //     //   this.error = 'An error occured...';
+    //     this.isLoading = false;
+    //   }
+    // );
+
+    authObs.subscribe(
+      (response) => {
+        console.log(response);
+        this.isLoading = false;
+        this.router.navigate(['/recipes']);
+      },
+      (errorMessage) => {
+        this.error = errorMessage;
+        this.isLoading = false;
+      }
+    );
+
+    form.reset();
   }
 }
