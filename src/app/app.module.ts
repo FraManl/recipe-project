@@ -20,6 +20,8 @@ import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component
 import { AuthComponent } from './auth/auth.component';
 import { LoadingSpinnerComponent } from './shared/loadingSpinner/loading-spinner.component';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
+import { AlertComponent } from './shared/alert/alert.component';
+import { PlaceholderDirective } from './shared/placeholder/placeholder.directive';
 
 @NgModule({
   declarations: [
@@ -36,6 +38,8 @@ import { AuthInterceptorService } from './auth/auth-interceptor.service';
     RecipeStartComponent,
     RecipeEditComponent,
     LoadingSpinnerComponent,
+    AlertComponent,
+    PlaceholderDirective,
   ],
   imports: [
     BrowserModule,
@@ -54,5 +58,7 @@ import { AuthInterceptorService } from './auth/auth-interceptor.service';
     },
   ],
   bootstrap: [AppComponent],
+  // now useful anymore, for ComponentFactoryResolver (Angular 9+)
+  entryComponents: [AlertComponent],
 })
 export class AppModule {}
