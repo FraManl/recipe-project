@@ -80,6 +80,33 @@ export class AuthService {
     const expirationData = new Date(new Date().getTime() + +expiresIn * 1000);
     const user = new User(email, localId, idToken, expirationData);
     this.user.next(user);
+    localStorage.setItem('userData', JSON.stringify(user));
+  }
+
+  autologin() {
+    const userData: {
+      email: string;
+      id: string;
+      _token: string;
+      _tokenExpirationDate: string;
+    } = JSON.parse(localStorage.getItem('userData'));
+    console.log('userdata:', userData);
+
+    if (!userData) return;
+
+    const loadedUser = new User(
+      userData.email,
+      userData.id,
+      userData._token,
+      new Date(userData._tokenExpirationDate)
+    );
+    console.log(loadedUser);
+
+    // here, we use the getter, if getter trueish.. then
+    if (loadedUser.token) {
+      // if truiesh (there is a token, and this token is not expired, so it is valid) then the user to authenticate is the user coming from for browser local storage (so the one that was previously authenticated)
+      this.user.next(loadedUser);
+    }
   }
 
   private handleError(errorRes: HttpErrorResponse) {
