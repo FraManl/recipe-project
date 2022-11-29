@@ -21,6 +21,7 @@ export class AuthService {
   // works like a normal subject, but also gives access to previously emitted value
   // we use it because we want to access to the latest user's token
   user = new BehaviorSubject<User>(null);
+  private tokenExpirationTimer: any;
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -69,6 +70,20 @@ export class AuthService {
   logout() {
     this.user.next(null);
     this.router.navigate(['/auth']);
+
+    localStorage.removeItem('userData');
+
+    // when promptly logging out, if a timer is already launched, kill that timer and reset it
+    if (this.tokenExpirationTimer) {
+      clearTimeout(this.tokenExpirationTimer);
+    }
+    this.tokenExpirationTimer = null;
+  }
+
+  autoLogout(expirationDuration: number) {
+    this.tokenExpirationTimer = setTimeout(() => {
+      this.logout();
+    }, expirationDuration);
   }
 
   private handleAuth(
@@ -79,7 +94,10 @@ export class AuthService {
   ) {
     const expirationData = new Date(new Date().getTime() + +expiresIn * 1000);
     const user = new User(email, localId, idToken, expirationData);
+    // emit the user
     this.user.next(user);
+    // start the auto logout timer everytime a user is logging-in
+    this.autoLogout(expiresIn * 1000);
     localStorage.setItem('userData', JSON.stringify(user));
   }
 
@@ -90,7 +108,6 @@ export class AuthService {
       _token: string;
       _tokenExpirationDate: string;
     } = JSON.parse(localStorage.getItem('userData'));
-    console.log('userdata:', userData);
 
     if (!userData) return;
 
@@ -100,12 +117,16 @@ export class AuthService {
       userData._token,
       new Date(userData._tokenExpirationDate)
     );
-    console.log(loadedUser);
 
     // here, we use the getter, if getter trueish.. then
     if (loadedUser.token) {
       // if truiesh (there is a token, and this token is not expired, so it is valid) then the user to authenticate is the user coming from for browser local storage (so the one that was previously authenticated)
       this.user.next(loadedUser);
+      // here we need to calculate the remaining time
+      const expirationDuration =
+        new Date(userData._tokenExpirationDate).getTime() -
+        new Date().getTime();
+      this.autoLogout(expirationDuration);
     }
   }
 
