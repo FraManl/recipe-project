@@ -6,6 +6,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { LoggingService } from '../logging.service';
 import { Ingredient } from '../shared/ingredient.model';
 import { ShoppingListService } from './shopping-list.service';
 
@@ -18,9 +19,13 @@ export class ShoppingListComponent implements OnInit, OnChanges, OnDestroy {
   ingredients: Ingredient[];
   private igChanged: Subscription;
 
-  constructor(private shoppingListService: ShoppingListService) {}
+  constructor(
+    private shoppingListService: ShoppingListService,
+    private loggingService: LoggingService
+  ) {}
 
   ngOnInit() {
+    this.loggingService.printLog('Hello from shopping list component');
     this.ingredients = this.shoppingListService.getIngredients();
     this.igChanged = this.shoppingListService.ingredientsChanged.subscribe(
       (ingredients: Ingredient[]) => {
